@@ -8,6 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -59,6 +60,14 @@ class FlightRepositoryTest {
 		flightData_4 = new Flight("IG", "Indigo", "Airbus 320F", "IG320F01");
 		flightData_5 = new Flight("AI", "Air India Limited", "Airbus 320F", "AI320F01");
 		flightAsList = Arrays.asList(flightData_1, flightData_2, flightData_3, flightData_4, flightData_5);
+	}
+	
+	@Test
+	void testSaveAll() throws Exception {
+		List<Flight> saveAll = flightRepository.saveAll(flightAsList);
+		flightRepository.flush();
+		Objects.requireNonNull(saveAll);
+		assertThat(saveAll.size()).isEqualTo(flightAsList.size());
 	}
 
 	/**
