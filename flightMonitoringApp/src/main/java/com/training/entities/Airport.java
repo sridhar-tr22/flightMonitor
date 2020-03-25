@@ -1,20 +1,20 @@
 package com.training.entities;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
  * @author User1
  * 
- *	
- *  <p>{@link Airport} class represents the Airport entity.</p>
+ * 
+ *         <p>
+ *         {@link Airport} class represents the Airport entity.
+ *         </p>
  */
 @Entity
 public class Airport {
 
 	@Id
-	@GeneratedValue
 	private long airportId;
 	private String airportName;
 	private String airportCode;

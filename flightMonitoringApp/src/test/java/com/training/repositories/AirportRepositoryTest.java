@@ -2,6 +2,9 @@ package com.training.repositories;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +28,7 @@ class AirportRepositoryTest {
 	private Airport airport_data_1;
 	private Airport airport_data_2;
 	private Airport airport_data_3;
+	private List<Airport> airportList;
 
 	@BeforeEach
 	void setUp() throws Exception {
@@ -43,41 +47,38 @@ class AirportRepositoryTest {
 		airport_data_3.setAirportName("Chhatrapati Shivaji Maharaj International Airport");
 		airport_data_3.setLocation("Mumbai, Maharashtra, India");
 
+		airportList = Arrays.asList(airport_data_1, airport_data_3);
 	}
 
 	@Test
 	void testSaveAndFlush() throws Exception {
 		Airport saved = airportRepository.saveAndFlush(airport_data_1);
-		if (saved != null) {
-			log.info(String.format("ID: %d", saved.getAirportId()));
-			log.info(String.format("Code: %s", saved.getAirportCode()));
-			log.info(String.format("Name: %s", saved.getAirportName()));
-			log.info(String.format("Location: %s", saved.getLocation()));
-			assertEquals(airport_data_1.getAirportCode(), saved.getAirportCode());
-		} else {
-			fail("Airport details are not saved.");
-		}
+		Objects.requireNonNull(saved, "Airport Save and Flush");
+
+		log.info(String.format("ID: %d", saved.getAirportId()));
+		log.info(String.format("Code: %s", saved.getAirportCode()));
+		log.info(String.format("Name: %s", saved.getAirportName()));
+		log.info(String.format("Location: %s", saved.getLocation()));
+		assertEquals(airport_data_1.getAirportCode(), saved.getAirportCode());
 	}
 
 	@Test
 	void testSave() throws Exception {
 		Airport saved = airportRepository.save(airport_data_2);
-		if (saved != null) {
-			log.info(String.format("ID: %d", saved.getAirportId()));
-			log.info(String.format("Code: %s", saved.getAirportCode()));
-			log.info(String.format("Name: %s", saved.getAirportName()));
-			log.info(String.format("Location: %s", saved.getLocation()));
-			assertEquals(airport_data_2.getAirportCode(), saved.getAirportCode());
-		} else {
-			fail("Airport details are not saved.");
-		}
+
+		Objects.requireNonNull(saved, "Airport save");
+		log.info(String.format("ID: %d", saved.getAirportId()));
+		log.info(String.format("Code: %s", saved.getAirportCode()));
+		log.info(String.format("Name: %s", saved.getAirportName()));
+		log.info(String.format("Location: %s", saved.getLocation()));
+		assertEquals(airport_data_2.getAirportCode(), saved.getAirportCode());
 	}
 
 	@Test
 	void testFindById() throws Exception {
-		airportRepository.save(airport_data_1);
+
 		Airport saved = airportRepository.save(airport_data_2);
-		airportRepository.save(airport_data_3);
+		airportRepository.saveAll(airportList);
 		airportRepository.flush();
 
 		Optional<Airport> findById = airportRepository.findById(saved.getAirportId());
@@ -99,34 +100,14 @@ class AirportRepositoryTest {
 		airportRepository.save(airport_data_2);
 		airportRepository.save(airport_data_3);
 		airportRepository.flush();
-
 		Optional<Airport> findByAirportCode = airportRepository.findByAirportCode(airport_data_3.getAirportCode());
-
-		if (!findByAirportCode.isPresent()) {
-			fail(String.format("No details available for the Airport Code :%s", airport_data_3.getAirportCode()));
+		if (findByAirportCode.isPresent()) {
+			log.info(String.format("Code: %s", findByAirportCode.get().getAirportId()));
+			log.info(String.format("Code: %s", findByAirportCode.get().getAirportCode()));
+			log.info(String.format("Name: %s", findByAirportCode.get().getAirportName()));
+			log.info(String.format("Location: %s", findByAirportCode.get().getLocation()));
+			assertEquals(airport_data_3.getAirportCode(), findByAirportCode.get().getAirportCode());
 		}
-
-		log.info(String.format("Code: %s", findByAirportCode.get().getAirportId()));
-		log.info(String.format("Code: %s", findByAirportCode.get().getAirportCode()));
-		log.info(String.format("Name: %s", findByAirportCode.get().getAirportName()));
-		log.info(String.format("Location: %s", findByAirportCode.get().getLocation()));
-		assertEquals(airport_data_3.getAirportCode(), findByAirportCode.get().getAirportCode());
-
-		/*
-		 * if(findByAirportCode.isPresent()) { log.info(String.format("ID: %d",
-		 * findByAirportCode.get().getAirportId())); log.info(String.format("Code: %s",
-		 * findByAirportCode.get().getAirportCode()));
-		 * log.info(String.format("Name: %s",
-		 * findByAirportCode.get().getAirportName()));
-		 * log.info(String.format("Location: %s",
-		 * findByAirportCode.get().getLocation()));
-		 * 
-		 * assertEquals(airport_data_3.getAirportCode(),findByAirportCode.get().
-		 * getAirportCode()); } else {
-		 * fail(String.format("No details available for the Airport Code :%s",
-		 * airport_data_3.getAirportCode())); }
-		 */
-
 	}
 
 }
